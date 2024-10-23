@@ -15,10 +15,10 @@ import {usePostsStore} from '@/stores/posts/posts'
 
 const postsStore = usePostsStore()
 const {posts} = storeToRefs(postsStore)
-const {fetchPosts} = postsStore
+const {initPosts} = postsStore
 
 onMounted(async () => {
-  fetchPosts()
+  initPosts()
 })
 </script>
 
