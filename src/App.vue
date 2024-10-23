@@ -1,19 +1,11 @@
 <template>
   <v-app>
     <v-main>
-
+      <RouterView />
     </v-main>
   </v-app>
 </template>
 
 <script setup lang="ts">
-async function getData() {
-  const response: Response = await fetch('./src/db/posts.json')
-  if (response.ok) {
-    const posts = await response.json()
-    debugger
-  }
-}
-
-getData()
+import { RouterView } from 'vue-router'
 </script>
