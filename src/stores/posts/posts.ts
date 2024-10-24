@@ -11,7 +11,7 @@ export const usePostsStore = defineStore('postsStore', {
       postsJSON: useLocalStorage<string | undefined>('posts', undefined),
       counter: 0,
       isEditMode: false,
-      editingPostId: 0
+      editingPost: undefined
     }
   },
   actions: {
@@ -58,8 +58,10 @@ export const usePostsStore = defineStore('postsStore', {
     },
 
     editById(postId: number): boolean {
-      if (this.posts?.find(post => post.id === postId)) {
-        this.editingPostId = postId
+      const targetPost = this.posts?.find(post => post.id === postId)
+
+      if (targetPost) {
+        this.editingPost = targetPost
         this.isEditMode = true
         return true
       } else {

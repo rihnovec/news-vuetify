@@ -6,5 +6,5 @@ export interface IPostsState {
   postsJSON: TypeStoragePosts,
   counter: number,
   isEditMode: boolean,
-  editingPostId: number
+  editingPost: IPost | undefined
 }
