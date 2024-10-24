@@ -18,8 +18,9 @@
       </template>
     </v-list-item>
   </v-list>
-  <v-sheet width="100%" class="pt-2 pb-2 d-flex justify-center">
-    <v-btn>Добавить пост</v-btn>
+  <v-sheet width="100%" class="py-2 d-flex justify-center">
+    <v-btn append-icon="mdi-plus" color="info" size="large"
+    @click="$router.push({name: AppRouteNames.CREATE_POST})">Добавить пост</v-btn>
   </v-sheet>
 </template>
 
@@ -30,6 +31,7 @@ import {storeToRefs} from 'pinia'
 import {usePostsStore} from '@/stores/posts/posts'
 
 import { TypeStoragePosts } from '@/typings/types/TypeStoragePosts'
+import {AppRouteNames} from '@/typings/enums/AppRouteNames'
 
 const postsStore = usePostsStore()
 const {posts} = storeToRefs(postsStore)
@@ -50,7 +52,3 @@ onMounted(async () => {
   initPosts()
 })
 </script>
-
-<style scoped>
-
-</style>
