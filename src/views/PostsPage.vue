@@ -31,16 +31,20 @@
   </v-sheet>
 
   <v-dialog v-model="isEditMode" max-width="600px">
-    <v-confirm-edit @save="isEditMode = false" @cancel="isEditMode = false" v-model="editingPost">
-      <template v-slot:default="{ model: proxyModel }">
+    <v-confirm-edit @save="isEditMode = false" @cancel="isEditMode = false" v-model="editingPost" ok-text="Сохранить" cancel-text="Отменить">
+      <template v-slot:default="{ model: proxyModel, actions }">
         <v-card title="Редактирование поста" class="pa-2">
           <template v-slot:text>
             <v-text-field
               v-model="proxyModel.value.title"
             ></v-text-field>
             <v-textarea
-              v-model="proxyModel.value.subtitle"
+              v-model="proxyModel.value.subtitle" no-resize
             ></v-textarea>
+          </template>
+          <template v-slot:actions>
+            <v-spacer></v-spacer>
+            <component :is="actions"></component>
           </template>
         </v-card>
       </template>
