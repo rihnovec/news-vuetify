@@ -8,7 +8,7 @@
       hide-details
       @click:clear="resetQuery"></v-text-field>
   </v-app-bar>
-  <v-list lines="two" selectable>
+  <v-list lines="two" selectable v-if="posts.length > 0">
     <v-list-item v-for="post in postsList"
     :key="post.id"
     :title="post.title"
@@ -18,6 +18,9 @@
       </template>
     </v-list-item>
   </v-list>
+  <v-alert type="info" variant="tonal" title="Постов пока нет" v-else></v-alert>
+  <v-alert type="warning" variant="outlined" title="По вашему запросу постов нет"
+    v-if="posts.length > 0 && postsList.length === 0"></v-alert>
   <v-sheet width="100%" class="py-2 d-flex justify-center">
     <v-btn append-icon="mdi-plus" color="info" size="large"
     @click="$router.push({name: AppRouteNames.CREATE_POST})">Добавить пост</v-btn>
@@ -30,17 +33,23 @@ import type {Ref} from 'vue'
 import {storeToRefs} from 'pinia'
 import {usePostsStore} from '@/stores/posts/posts'
 
-import { TypeStoragePosts } from '@/typings/types/TypeStoragePosts'
 import {AppRouteNames} from '@/typings/enums/AppRouteNames'
+import { IPost } from '@/typings/interfaces/IPost'
 
 const postsStore = usePostsStore()
 const {posts} = storeToRefs(postsStore)
 const {initPosts, removeById} = postsStore
 const searchQuery: Ref<string> = ref('')
 
-const postsList: TypeStoragePosts = computed(() => {
+const postsList: Ref<IPost[]> = computed(() => {
   return searchQuery.value.length > 0
-    ? posts.value?.filter(post => post.title.includes(searchQuery.value))
+    ? posts.value?.filter(post => {
+      const titleToSearch = post.title.toLowerCase()
+      const subtitleToSearch = post.subtitle.toLowerCase()
+      const query = searchQuery.value.toLowerCase()
+
+      return titleToSearch.includes(query) || subtitleToSearch.includes(query)
+    })
     : posts.value
 })
 
