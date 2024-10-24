@@ -1,5 +1,5 @@
-import {IPost} from '@/typings/interfaces/IPost'
+import {TypeStoragePosts} from '@/typings/types/TypeStoragePosts'
 
 export interface IPostsState {
-  posts: IPost[] | undefined
+  posts: TypeStoragePosts
 }

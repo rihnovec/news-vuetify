@@ -1,12 +1,12 @@
-import {IPostsState} from '@/typings/interfaces/IPostsState'
-import {IPost} from '@/typings/interfaces/IPost'
-
 import {defineStore} from 'pinia'
+import {useLocalStorage} from '@vueuse/core'
+
+import {IPostsState} from '@/typings/interfaces/IPostsState'
 
 export const usePostsStore = defineStore('postsStore', {
   state: (): IPostsState => {
     return {
-      posts: [] as IPost[]
+      posts: useLocalStorage('posts', undefined)
     }
   },
   actions: {
@@ -19,6 +19,15 @@ export const usePostsStore = defineStore('postsStore', {
 
       if (response.ok) {
         this.posts = await response.json()
+      }
+    },
+
+    removeById(postId: number): boolean {
+      if (this.posts?.find(post => post.id === postId)) {
+        this.posts = this.posts.filter(post => post.id !== postId)
+        return true
+      } else {
+        return false
       }
     }
   }
