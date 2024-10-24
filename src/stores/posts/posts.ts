@@ -7,9 +7,11 @@ import { IPost } from '@/typings/interfaces/IPost'
 export const usePostsStore = defineStore('postsStore', {
   state: (): IPostsState => {
     return {
-      posts: [],
+      posts: [] as IPost[],
       postsJSON: useLocalStorage<string | undefined>('posts', undefined),
-      counter: 0
+      counter: 0,
+      isEditMode: false,
+      editingPostId: 0
     }
   },
   actions: {
@@ -49,6 +51,16 @@ export const usePostsStore = defineStore('postsStore', {
         this.posts = this.posts.filter(post => post.id !== postId)
 
         this.updateJSONPosts()
+        return true
+      } else {
+        return false
+      }
+    },
+
+    editById(postId: number): boolean {
+      if (this.posts?.find(post => post.id === postId)) {
+        this.editingPostId = postId
+        this.isEditMode = true
         return true
       } else {
         return false

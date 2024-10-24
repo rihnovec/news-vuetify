@@ -14,6 +14,7 @@
     :title="post.title"
     :subtitle="post.subtitle">
       <template v-slot:append>
+        <v-btn icon="mdi-pencil" variant="text" @click="editById(post.id)"></v-btn>
         <v-btn icon="mdi-delete" variant="text" @click="removeById(post.id)"></v-btn>
       </template>
     </v-list-item>
@@ -25,6 +26,22 @@
     <v-btn append-icon="mdi-plus" color="info" size="large"
     @click="$router.push({name: AppRouteNames.CREATE_POST})">Добавить пост</v-btn>
   </v-sheet>
+  <v-dialog v-model="isEditMode" max-width="600px">
+    <v-confirm-edit @save="isEditMode = false" @cancel="isEditMode = false">
+      <template v-slot:default>
+        <v-card title="Редактирование поста" class="pa-2">
+          <template v-slot:text>
+            <v-text-field
+              v-model="posts[0].title"
+            ></v-text-field>
+            <v-textarea
+              v-model="posts[0].subtitle"
+            ></v-textarea>
+          </template>
+        </v-card>
+      </template>
+    </v-confirm-edit>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -37,8 +54,8 @@ import {AppRouteNames} from '@/typings/enums/AppRouteNames'
 import { IPost } from '@/typings/interfaces/IPost'
 
 const postsStore = usePostsStore()
-const {posts} = storeToRefs(postsStore)
-const {initPosts, removeById} = postsStore
+const {posts, isEditMode} = storeToRefs(postsStore)
+const {initPosts, removeById, editById} = postsStore
 const searchQuery: Ref<string> = ref('')
 
 const postsList: Ref<IPost[]> = computed(() => {

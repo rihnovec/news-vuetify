@@ -4,5 +4,7 @@ import { IPost } from './IPost'
 export interface IPostsState {
   posts: IPost[],
   postsJSON: TypeStoragePosts,
-  counter: number
+  counter: number,
+  isEditMode: boolean,
+  editingPostId: number
 }
