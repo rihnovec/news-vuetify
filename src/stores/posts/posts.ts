@@ -7,15 +7,32 @@ import { IPost } from '@/typings/interfaces/IPost'
 export const usePostsStore = defineStore('postsStore', {
   state: (): IPostsState => {
     return {
-      posts: useLocalStorage('posts', undefined),
+      posts: [],
+      postsJSON: useLocalStorage<string | undefined>('posts', undefined),
       counter: 0
     }
   },
   actions: {
     async initPosts(): Promise<void> {
-      await this.fetchPosts()
+      if (this.postsJSON === undefined) {
+        await this.fetchPosts()
+      } else {
+        this.getPostsByLocalStorage()
+      }
 
       this.counter = Math.max(...this.posts?.map(post => post.id)) + 1
+    },
+
+    initCounterValue() {
+      if (this.posts.length > 0) {
+        this.counter = Math.max(...this.posts?.map(post => post.id)) + 1
+      } else {
+        this.counter = 1
+      }
+    },
+
+    getPostsByLocalStorage(): void {
+      this.posts = JSON.parse(this.postsJSON as string)
     },
 
     async fetchPosts(): Promise<void> {
@@ -23,12 +40,15 @@ export const usePostsStore = defineStore('postsStore', {
 
       if (response.ok) {
         this.posts = await response.json()
+        this.updateJSONPosts()
       }
     },
 
     removeById(postId: number): boolean {
       if (this.posts?.find(post => post.id === postId)) {
         this.posts = this.posts.filter(post => post.id !== postId)
+
+        this.updateJSONPosts()
         return true
       } else {
         return false
@@ -40,6 +60,12 @@ export const usePostsStore = defineStore('postsStore', {
         id: this.counter++,
         ...post
       })
+
+      this.updateJSONPosts()
+    },
+
+    updateJSONPosts(): void {
+      this.postsJSON = JSON.stringify(this.posts)
     }
   }
 })
