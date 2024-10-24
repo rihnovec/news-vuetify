@@ -8,15 +8,15 @@
       v-model="postTitle"
       label="Название поста"
       variant="outlined"
-      required
+      :rules="postTitleRules"
       ></v-text-field>
     <v-textarea
       v-model="postSubtitle"
       label="Описание поста"
       variant="outlined"
-      required
+      :rules="postSubtitleRules"
       ></v-textarea>
-    <v-btn color="info" size="large" @click="addPost">
+    <v-btn color="info" size="large" @click="addPost" :disabled="!valid">
       Добавить
     </v-btn>
   </v-form>
@@ -26,12 +26,18 @@
 import { usePostsStore } from '@/stores/posts/posts'
 import {AppRouteNames} from '@/typings/enums/AppRouteNames'
 import { useRouter } from 'vue-router'
+import {useNewPostFields} from '@/composables/newPostFields'
+
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 
-const valid: Ref<boolean> = ref(true)
-const postTitle: Ref<string> = ref('')
-const postSubtitle: Ref<string> = ref('')
+const valid: Ref<boolean> = ref(false)
+const {
+  postTitle,
+  postTitleRules,
+  postSubtitle,
+  postSubtitleRules
+} = useNewPostFields()
 
 const {add} = usePostsStore()
 const router = useRouter()
